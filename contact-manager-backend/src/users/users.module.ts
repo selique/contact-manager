@@ -4,7 +4,7 @@ import { UsersController } from './users.controller';
 import { DrizzleService } from '../drizzle/drizzle.service';
 
 @Module({
-  controllers: [UsersController],
-  providers: [UsersService, DrizzleService],
+    controllers: [UsersController],
+    providers: [UsersService, DrizzleService],
 })
 export class UsersModule {}

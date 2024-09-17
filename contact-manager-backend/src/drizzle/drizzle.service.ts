@@ -1,81 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
-import { dbConfig } from './db.config'; // Import your database configuration
-import { schema } from './schema'; // Import your schema definition
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+    PostgresJsDatabase,
+    drizzle as drizzlePgJs,
+} from 'drizzle-orm/postgres-js';
+import { NestDrizzleOptions } from './interfaces/drizzle.interfaces';
+import * as postgres from 'postgres';
+import { migrate as migratePgJs } from 'drizzle-orm/postgres-js/migrator';
+import { NEST_DRIZZLE_OPTIONS } from './drizzle.contants';
+
+interface IDrizzleService {
+    migrate(): Promise<void>;
+    getDrizzle(): Promise<PostgresJsDatabase>;
+}
 
 @Injectable()
-export class DrizzleService {
-  private pool = new Pool(dbConfig); // Initialize PostgreSQL connection pool
+export class DrizzleService implements IDrizzleService {
+    private _drizzle: PostgresJsDatabase<Record<string, unknown>>;
+    constructor(
+        @Inject(NEST_DRIZZLE_OPTIONS)
+        private _NestDrizzleOptions: NestDrizzleOptions,
+    ) {}
 
-  public db = drizzle(this.pool, { schema });
+    private logger = new Logger('DrizzleService');
 
-  constructor() {
-    this.init();
-  }
+    async migrate() {
+        const client = postgres(this._NestDrizzleOptions.url, { max: 1 });
+        await migratePgJs(
+            drizzlePgJs(client),
+            this._NestDrizzleOptions.migrationOptions,
+        );
+    }
+    async getDrizzle() {
+        let client: postgres.Sql<Record<string, never>>;
 
-  private async init() {
-    // Log initialization or perform any required setup
-    console.log('Drizzle ORM initialized with schema.');
-  }
-
-  // Define CRUD operations for contacts
-  public async createContact(data: {
-    name: string;
-    address?: string;
-    phone?: string;
-    email: string;
-    userId: number;
-  }) {
-    return this.db.insert(schema.contacts).values(data).returning();
-  }
-
-  public async findContactsByUser(userId: number) {
-    return this.db
-      .select()
-      .from(schema.contacts)
-      .where(schema.contacts.userId.eq(userId))
-      .get();
-  }
-
-  public async updateContact(
-    id: number,
-    data: {
-      name?: string;
-      address?: string;
-      phone?: string;
-      email?: string;
-      userId?: number;
-    },
-  ) {
-    return this.db
-      .update(schema.contacts)
-      .set(data)
-      .where({ id }) // Adjusted based on Drizzle ORM syntax
-      .returning();
-  }
-
-  public async deleteContact(id: number) {
-    return this.db
-      .delete(schema.contacts)
-      .where({ id }) // Adjusted based on Drizzle ORM syntax
-      .returning();
-  }
-
-  // Define CRUD operations for users
-  public async createUser(data: {
-    email: string;
-    passwordHash: string;
-    isAdmin?: boolean;
-  }) {
-    return this.db.insert(schema.users).values(data).returning();
-  }
-
-  public async findUserById(id: number) {
-    return this.db
-      .select()
-      .from(schema.users)
-      .where({ id }) // Adjusted based on Drizzle ORM syntax
-      .get(); // Use .get() if .one() does not exist
-  }
+        if (!this._drizzle) {
+            client = postgres(this._NestDrizzleOptions.url);
+            try {
+                await client`SELECT 1`; // Sending a test query to check connection
+                this.logger.log('Database connected successfully');
+            } catch (error) {
+                this.logger.error('Database connection error', error);
+                throw error; // Propagate the error
+            }
+            this._drizzle = drizzlePgJs(
+                client,
+                this._NestDrizzleOptions.options,
+            );
+        }
+        return this._drizzle;
+    }
 }

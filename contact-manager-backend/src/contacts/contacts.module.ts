@@ -4,7 +4,7 @@ import { ContactsController } from './contacts.controller';
 import { DrizzleService } from '../drizzle/drizzle.service';
 
 @Module({
-  controllers: [ContactsController],
-  providers: [ContactsService, DrizzleService],
+    controllers: [ContactsController],
+    providers: [ContactsService, DrizzleService],
 })
 export class ContactsModule {}

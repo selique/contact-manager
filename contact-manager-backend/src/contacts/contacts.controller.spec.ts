@@ -3,18 +3,18 @@ import { ContactsController } from './contacts.controller';
 import { ContactsService } from './contacts.service';
 
 describe('ContactsController', () => {
-  let controller: ContactsController;
+    let controller: ContactsController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [ContactsController],
-      providers: [ContactsService],
-    }).compile();
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [ContactsController],
+            providers: [ContactsService],
+        }).compile();
 
-    controller = module.get<ContactsController>(ContactsController);
-  });
+        controller = module.get<ContactsController>(ContactsController);
+    });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    it('should be defined', () => {
+        expect(controller).toBeDefined();
+    });
 });
