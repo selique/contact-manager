@@ -9,7 +9,7 @@ import {
     NestDrizzleOptions,
     NestDrizzleOptionsFactory,
 } from './interfaces/drizzle.interfaces';
-import { NEST_DRIZZLE_OPTIONS } from 'src/core/constants/db.constants';
+import { NEST_DRIZZLE_OPTIONS } from './drizzle.contants';
 
 @Global()
 @Module({

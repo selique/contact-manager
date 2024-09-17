@@ -1,25 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { DrizzleService } from '../drizzle/drizzle.service';
+import { ContactsRepository } from './repository/contacts.repository';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 
 @Injectable()
 export class ContactsService {
-    constructor(private readonly db: DrizzleService) {}
+    constructor(private readonly contactsRepository: ContactsRepository) {}
 
     async create(createContactDto: CreateContactDto, userId: number) {
-        return this.db.createContact({ ...createContactDto, userId });
+        return this.contactsRepository.createContact({
+            ...createContactDto,
+            userId,
+        });
     }
 
     async findAllByUser(userId: number) {
-        return this.db.findContactsByUser(userId);
+        return this.contactsRepository.findContactsByUser(userId);
     }
 
     async update(id: number, updateContactDto: UpdateContactDto) {
-        return this.db.updateContact(id, updateContactDto);
+        return this.contactsRepository.updateContact(id, updateContactDto);
     }
 
     async remove(id: number) {
-        return this.db.deleteContact(id);
+        return this.contactsRepository.deleteContact(id);
     }
 }

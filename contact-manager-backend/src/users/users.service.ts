@@ -1,21 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { DrizzleService } from '../drizzle/drizzle.service';
+import { UsersRepository } from './repository/users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
-import { users } from '../drizzle/schema';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
-    constructor(private database: DrizzleService) {}
+    constructor(private readonly usersRepository: UsersRepository) {}
 
-    create(createUserDto: CreateUserDto) {
-        return this.database.select().from(users).insert(createUserDto);
+    async create(createUserDto: CreateUserDto) {
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+        return this.usersRepository.createUser({
+            email: createUserDto.email,
+            passwordHash: hashedPassword,
+            isAdmin: createUserDto.isAdmin,
+        });
     }
 
-    findOneByEmail(email: string) {
-        return this.db.users.findOne({ where: { email } });
+    async findOneByEmail(email: string) {
+        return this.usersRepository.findOneByEmail(email);
     }
 
-    findAll() {
-        return this.db.users.findMany();
+    async findAll() {
+        // Considerando que findAll é uma função personalizada; ajuste conforme necessário
+        return this.usersRepository.findAllUsers();
     }
 }

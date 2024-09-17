@@ -10,7 +10,7 @@ import { NEST_DRIZZLE_OPTIONS } from './drizzle.contants';
 
 interface IDrizzleService {
     migrate(): Promise<void>;
-    getDrizzle(): Promise<PostgresJsDatabase>;
+    getDrizzle(): Promise<PostgresJsDatabase<Record<string, unknown>>>;
 }
 
 @Injectable()

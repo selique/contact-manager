@@ -12,11 +12,12 @@ export class UsersRepository {
     ) {}
 
     async findOneByEmail(email: string) {
-        return this.database
+        const users = await this.database
             .select()
             .from(schema.users)
             .where(eq(schema.users.email, email))
             .limit(1);
+        return users[0] || null;
     }
 
     async createUser(data: {
@@ -32,5 +33,9 @@ export class UsersRepository {
             .select()
             .from(schema.users)
             .where(eq(schema.users.id, id));
+    }
+
+    async findAllUsers() {
+        return this.database.select().from(schema.users);
     }
 }
