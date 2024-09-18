@@ -4,7 +4,7 @@ import {
     drizzle as drizzlePgJs,
 } from 'drizzle-orm/postgres-js';
 import { NestDrizzleOptions } from './interfaces/drizzle.interfaces';
-import * as postgres from 'postgres';
+import postgres from 'postgres';
 import { migrate as migratePgJs } from 'drizzle-orm/postgres-js/migrator';
 import { NEST_DRIZZLE_OPTIONS } from './drizzle.contants';
 
