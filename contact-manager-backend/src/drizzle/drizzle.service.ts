@@ -38,14 +38,19 @@ export class DrizzleService implements IDrizzleService {
             try {
                 await client`SELECT 1`; // Sending a test query to check connection
                 this.logger.log('Database connected successfully');
+
+                this._drizzle = drizzlePgJs(
+                    client,
+                    this._NestDrizzleOptions.options,
+                );
             } catch (error) {
-                this.logger.error('Database connection error', error);
+                this.logger.error(
+                    'Database connection error',
+                    error.message || error,
+                );
+                this.logger.debug('Full Error: ', error);
                 throw error; // Propagate the error
             }
-            this._drizzle = drizzlePgJs(
-                client,
-                this._NestDrizzleOptions.options,
-            );
         }
         return this._drizzle;
     }
