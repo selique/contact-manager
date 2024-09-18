@@ -22,7 +22,6 @@ export class UsersService {
     }
 
     async findAll() {
-        // Considerando que findAll é uma função personalizada; ajuste conforme necessário
         return this.usersRepository.findAllUsers();
     }
 }
