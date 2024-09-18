@@ -15,7 +15,7 @@ export class AuthService {
         if (user && bcrypt.compareSync(pass, user.passwordHash)) {
             return user;
         }
-        return null;
+        return 'null';
     }
 
     async login(user: any) {
@@ -25,7 +25,10 @@ export class AuthService {
             isAdmin: user.isAdmin,
         };
         return {
-            access_token: this.jwtService.sign(payload),
+            access_token: this.jwtService.signAsync(payload, {
+                secret: process.env.JWT_SECRET,
+                expiresIn: '1d',
+            }),
         };
     }
 }
