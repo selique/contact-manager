@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1726625319639,
+      "tag": "20240918020839_oval_risque",
+      "breakpoints": true
+    }
+  ]
+}
