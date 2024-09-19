@@ -140,6 +140,7 @@ export default function SignUp() {
 
                             {/* Submit button will go here */}
                             <LoadingButton
+                                text="Sign Up"
                                 pending={form.formState.isSubmitting}
                             />
                         </form>

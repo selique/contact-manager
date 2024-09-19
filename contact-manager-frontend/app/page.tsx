@@ -151,6 +151,7 @@ export default function Home() {
     
                             {/* Submit button will go here */}
                             <LoadingButton
+                                text="Add Contact"
                                 pending={form.formState.isSubmitting}
                             />
                         </form>
