@@ -40,12 +40,11 @@ export default function Home() {
 
     const onSubmit = async (values: z.infer<typeof contactSchema>) => {
         try {
+            console.log(values);
             const result = await handleAddContact(values);
             if (result?.message) {
                 setGlobalError(result.message);
-            } else {
-                router.push("/auth/signin");
-            }
+            }  
         } catch (error) {
             console.log("An unexpected error occurred. Please try again.", error);
         }
@@ -60,6 +59,7 @@ export default function Home() {
                     </CardTitle>
                 </CardContent>
             </Card>
+            {JSON.stringify(session, 'null', 2)}
             <ContactsPage token={session?.user.access_token} />
             <Card className="w-full max-w-md">
                 <CardHeader>

@@ -12,16 +12,15 @@ import {
 import { ContactsService } from './contacts.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from '../auth/guards/roles.guard';
 
 @Controller('contacts')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtGuard)
 export class ContactsController {
     constructor(private readonly contactsService: ContactsService) {}
 
     @Post()
-    @UseGuards(JwtAuthGuard)
     async create(@Body() createContactDto: CreateContactDto, @Req() req) {
         const result = await this.contactsService.create(
             createContactDto,
@@ -34,13 +33,12 @@ export class ContactsController {
     }
 
     @Get()
-    @UseGuards(JwtAuthGuard)
     findAll(@Req() req) {
-        return this.contactsService.findAllByUser(req.user.id);
+        console.log(req);
+        return this.contactsService.findAllByUser(req.userId);
     }
 
     @Patch(':id')
-    @UseGuards(JwtAuthGuard)
     update(
         @Param('id') id: number,
         @Body() updateContactDto: UpdateContactDto,
@@ -49,7 +47,7 @@ export class ContactsController {
     }
 
     @Delete(':id')
-    @UseGuards(AdminGuard, JwtAuthGuard)
+    @UseGuards(AdminGuard)
     remove(@Param('id') id: number) {
         return this.contactsService.remove(id);
     }

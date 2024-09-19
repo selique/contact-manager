@@ -30,9 +30,6 @@ export async function handleAddContact({ name, address, phone, email, token }: {
         },
         body: JSON.stringify({ name, address, phone, email })
     })
-
-    console.log(addContact)
-
     if(addContact.status !== 201) {
         return {
             message: 'Something went wrong. Please try again.'
