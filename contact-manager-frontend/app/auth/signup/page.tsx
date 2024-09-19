@@ -22,8 +22,10 @@ import {
 } from "@/app/actions/authActions";
 import { useState } from "react";
 import ErrorMessage from "@/components/error-message";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+    const router = useRouter();
     const [globalError, setGlobalError] = useState<string>("");
     const form = useForm<z.infer<typeof signUpSchema>>({
         resolver: zodResolver(signUpSchema),
@@ -40,9 +42,11 @@ export default function SignUp() {
             const result = await handleCredentialsSignup(values);
             if (result?.message) {
                 setGlobalError(result.message);
+            } else {
+                router.push("/auth/signin");
             }
         } catch (error) {
-            console.log("An unexpected error occurred. Please try again.");
+            console.log("An unexpected error occurred. Please try again.", error);
         }
     };
 

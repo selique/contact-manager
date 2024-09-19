@@ -41,10 +41,8 @@ export async function handleCredentialsSignup({ email, password, isAdmin }: {
         }) 
     } catch (error) {
         if (error) {
-            console.log(error)
             return {
-                message: 'Something went wrong.',
-                error: error
+                message: 'Something went wrong. ' + error,
             }
         }
         throw error;
