@@ -3,7 +3,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run dbgenerate && npm run dbpush
 RUN npm run build
 
 CMD ["npm", "run", "start:prod"]
