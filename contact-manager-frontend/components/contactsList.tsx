@@ -1,32 +1,38 @@
-import { useEffect, useState } from "react";
-import { getContacts } from "@/app/actions/contactActions";
+import { Card, CardContent, CardTitle } from "./ui/card";
 
-export default function ContactsPage(token: string ) {
-    const [contacts, setContacts] = useState([] as any[]);
-    const [error, setError] = useState(null);
+export async function ContactsList(token: string) {
 
-    useEffect(() => {
-        const fetchContacts = async () => {
-            try {
-                const response = await getContacts(token);
-                setContacts(response);
-            } catch (error) {
-                setError(error);
-            }
-        };
-        fetchContacts();
-    }, [token]);
+    const response = await fetch( 'http://localhost:4000/contacts', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token.token}`
+        },
+        next: {
+            tags: ['get-contacts-list']
+        }
+    })
 
+    const data = await response.json()
+    console.log(data)
     return (
-        <div>
+        <>
             <h1>Contacts List</h1>
-            {error && <div className="text-red-500">{error.message}</div>}
             <ul>
-                {Array.isArray(contacts) && contacts.map((contact) => (
-                    <li key={contact.id}>{contact.name}</li>
+                {data.map((contact: any) => (
+                    <li key={contact.id}>
+                        <Card className="max-w-sm">
+                            <CardContent>
+                                <CardTitle>{contact.name}</CardTitle>
+                                <p>{contact.address}</p>
+                                <p>{contact.phone}</p>
+                                <p>{contact.email}</p>
+                            </CardContent>
+                        </Card>
+                    </li>
                 ))}
             </ul>
-        </div>
+        </>
     );
 }
 

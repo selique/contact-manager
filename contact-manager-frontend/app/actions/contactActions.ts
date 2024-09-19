@@ -1,39 +1,27 @@
 "use server";
 
-export async function getContacts(token: string) {
-    try {
-        const contacts = await fetch(process.env.BACKEND_URL + '/contacts', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            }
-        })
-        return contacts.json()
-    } catch (error) {
-        return {
-            message: 'Something went wrong. Please try again.'
-        }
-    }
-}
+import { revalidateTag } from "next/cache";
 
-export async function handleAddContact({ name, address, phone, email, token }: {
+export async function handleAddContact({ name, address, phone, email, userId}: {
     name: string,
     address: string,
     phone: string,
-    email: string
-    token: string
-}) {
-    console.log({ name, address, phone, email, token})
+    email: string,
+    userId: number
+},  token: string) {
     try {
-        const addContact = await fetch(process.env.BACKEND_URL + '/contacts', {
+        
+        const addContact = await fetch('http://localhost:4000/contacts', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token.token}`
             },
-            body: JSON.stringify({ name, address, phone, email })
+            body: JSON.stringify({ name, address, phone, email, userId})
         })
+
+        revalidateTag('get-contacts-list')
+        
         return addContact
     } catch (error) {
         return {
@@ -51,11 +39,11 @@ export async function  handleUpdateContact({ id, name, address, phone, email, to
     token: string
 }) {
     try {
-        await fetch(process.env.BACKEND_URL + '/contacts', {
+        await fetch('http://localhost:4000/contacts', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token.token}`
             },
             body: JSON.stringify({ id, name, address, phone, email })   
         })
@@ -73,11 +61,11 @@ export async function  handleDeleteContact({ id, token }: {
 
     try {
 
-        await fetch(process.env.BACKEND_URL + '/contacts', {
+        await fetch('http://localhost:4000/contacts', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token.token}`
             },
             body: JSON.stringify({ id })
         })
