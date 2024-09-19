@@ -8,6 +8,11 @@ export class UsersService {
     constructor(private readonly usersRepository: UsersRepository) {}
 
     async create(createUserDto: CreateUserDto) {
+
+        if (await this.usersRepository.findOneByEmail(createUserDto.email)) {
+            throw new Error('User already exists');
+        }
+            
         const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
         return this.usersRepository.createUser({
