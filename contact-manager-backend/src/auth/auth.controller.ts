@@ -7,12 +7,11 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('login')
-    signin(@Body() signInDto: SignInDto) {
-        const login = this.authService.validateUser(
+    async signin(@Body() signInDto: SignInDto) {
+        const login = await this.authService.validateUser(
             signInDto.email,
             signInDto.password,
         );
-
         return this.authService.login(login);
     }
 }
