@@ -3,6 +3,7 @@ import { DRIZZLE_ORM } from '../../drizzle/drizzle.contants';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { schema } from '../../drizzle/schema';
 import { eq } from 'drizzle-orm';
+import { CreateContactDto } from '../dto/create-contact.dto';
 
 @Injectable()
 export class ContactsRepository {
@@ -11,14 +12,16 @@ export class ContactsRepository {
         private database: PostgresJsDatabase<typeof schema>,
     ) {}
 
-    async createContact(data: {
-        name: string;
-        address?: string;
-        phone?: string;
-        email: string;
-        userId: number;
-    }) {
-        return this.database.insert(schema.contacts).values(data).returning();
+    async createContact(data: CreateContactDto, userId: number) {
+        const contactData = {
+            ...data,
+            userId,
+        };
+
+        return this.database
+            .insert(schema.contacts)
+            .values(contactData)
+            .returning();
     }
 
     async findContactsByUser(userId: number) {

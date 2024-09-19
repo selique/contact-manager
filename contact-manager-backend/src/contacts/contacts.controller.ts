@@ -21,8 +21,9 @@ export class ContactsController {
     constructor(private readonly contactsService: ContactsService) {}
 
     @Post()
-    async create(@Body() createContactDto: CreateContactDto) {
-        return await this.contactsService.create(createContactDto);
+    async create(@Body() createContactDto: CreateContactDto, @Req() req) {
+        const userId = req.user.userId;
+        return await this.contactsService.create(createContactDto, userId);
     }
 
     @Get()

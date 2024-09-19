@@ -7,10 +7,13 @@ import { UpdateContactDto } from './dto/update-contact.dto';
 export class ContactsService {
     constructor(private readonly contactsRepository: ContactsRepository) {}
 
-    async create(createContactDto: CreateContactDto) {
-        return this.contactsRepository.createContact({
-            ...createContactDto,
-        });
+    async create(createContactDto: CreateContactDto, userId: number) {
+        return this.contactsRepository.createContact(
+            {
+                ...createContactDto,
+            },
+            userId,
+        );
     }
 
     async findAllByUser(userId: number) {

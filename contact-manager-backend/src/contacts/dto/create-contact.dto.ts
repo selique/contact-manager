@@ -21,9 +21,4 @@ export class CreateContactDto {
     @IsNotEmpty()
     @IsEmail()
     email: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    userId: number;
 }
