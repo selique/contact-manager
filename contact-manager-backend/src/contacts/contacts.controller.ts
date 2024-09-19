@@ -21,11 +21,9 @@ export class ContactsController {
     constructor(private readonly contactsService: ContactsService) {}
 
     @Post()
-    async create(@Body() createContactDto: CreateContactDto, @Req() req) {
-        const result = await this.contactsService.create(
-            createContactDto,
-            req.user.id,
-        );
+    async create(@Body() createContactDto: CreateContactDto) {
+        const result = await this.contactsService.create(createContactDto);
+
         return {
             message: 'Contact created successfully!',
             result,
@@ -34,8 +32,7 @@ export class ContactsController {
 
     @Get()
     findAll(@Req() req) {
-        console.log(req);
-        return this.contactsService.findAllByUser(req.userId);
+        return this.contactsService.findAllByUser(req.user.userId);
     }
 
     @Patch(':id')

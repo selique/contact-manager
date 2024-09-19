@@ -25,5 +25,5 @@ export class CreateContactDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    userId: string;
+    userId: number;
 }

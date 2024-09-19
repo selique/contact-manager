@@ -25,6 +25,10 @@ export class ContactsRepository {
         return this.database
             .select()
             .from(schema.contacts)
+            .innerJoin(
+                schema.users,
+                eq(schema.contacts.userId, schema.users.id),
+            )
             .where(eq(schema.users.id, userId));
     }
 
