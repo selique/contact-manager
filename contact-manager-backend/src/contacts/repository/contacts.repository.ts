@@ -26,13 +26,15 @@ export class ContactsRepository {
 
     async findContactsByUser(userId: number) {
         return this.database
-            .select()
+            .select({
+                id: schema.contacts.id,
+                name: schema.contacts.name,
+                address: schema.contacts.address,
+                phone: schema.contacts.phone,
+                email: schema.contacts.email,
+            })
             .from(schema.contacts)
-            .innerJoin(
-                schema.users,
-                eq(schema.contacts.userId, schema.users.id),
-            )
-            .where(eq(schema.users.id, userId));
+            .where(eq(schema.contacts.userId, userId));
     }
 
     async updateContact(
