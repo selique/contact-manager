@@ -8,9 +8,13 @@ declare module "next-auth" {
         id: string
         email: string
         isAdmin: boolean
+        access_token: string
     }
     interface Session {
-        user: User
+        user: {
+            user: User
+            access_token: string
+        }
     }
 }
 

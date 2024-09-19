@@ -27,7 +27,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     },
                     body: JSON.stringify(parsedCredentials.data)
                 });
-                console.log({response})
 
                 if (response.status !== 201) {
                     console.log("Invalid credentials");
@@ -35,7 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 } 
 
                 user = await response.json();
-                
+
                 return user;
             }
         })
@@ -53,21 +52,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // }
             return !!auth;
         },
-        jwt({ token, user, trigger, session }) {
-            if (user) {
-                token.id = user.id as string;
-                token.email = user.email as string;
-                token.isAdmin = user.isAdmin as boolean;
-            }
-            if (trigger === "update" && session) {
-                token = { ...token, ...session };
-            }
-            return token;
+        jwt({ token, user }) {
+            return { ...token, ...user };
         },
         session({ session, token }) {
-            session.user.id = token.id;
-            session.user.email = token.email;
-            session.user.isAdmin = token.isAdmin;
+            session.user = token;
             return session;
         }
     },

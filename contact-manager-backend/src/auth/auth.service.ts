@@ -13,17 +13,17 @@ export class AuthService {
     async validateUser(email: string, password: string): Promise<any> {
         const user = await this.usersService.findOneByEmail(email);
         if (!user) {
-            throw new UnauthorizedException('Password Mismatch');
+            throw new UnauthorizedException('Invalid credentials');
         }
 
-        const passwordMatch = bcrypt.compareSync(password, user.passwordHash);
+        // Use the async version of bcrypt
+        const passwordMatch = await bcrypt.compare(password, user.passwordHash);
         if (!passwordMatch) {
-            throw new UnauthorizedException('Password Mismatch');
+            throw new UnauthorizedException('Invalid credentials');
         }
 
         return user;
     }
-
     async login(user: any) {
         const payload = {
             email: user.email,
@@ -35,6 +35,7 @@ export class AuthService {
 
         return {
             access_token,
+            user,
         };
     }
 }
