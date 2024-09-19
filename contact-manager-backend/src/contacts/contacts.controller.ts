@@ -22,12 +22,7 @@ export class ContactsController {
 
     @Post()
     async create(@Body() createContactDto: CreateContactDto) {
-        const result = await this.contactsService.create(createContactDto);
-
-        return {
-            message: 'Contact created successfully!',
-            result,
-        };
+        return await this.contactsService.create(createContactDto);
     }
 
     @Get()
