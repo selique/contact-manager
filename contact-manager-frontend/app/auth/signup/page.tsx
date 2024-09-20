@@ -129,8 +129,13 @@ export default function SignUp() {
                                         <FormControl>
                                             <Input
                                                 type="checkbox"
-                                                placeholder="Is Admin"
-                                                {...field}
+                                                checked={field.value} // Use checked for checkbox
+                                                onChange={(e) => field.onChange(e.target.checked)} // Update value based on checkbox state
+                                                // Do not spread field, handle other props manually
+                                                name={field.name}
+                                                onBlur={field.onBlur}
+                                                ref={field.ref}
+                                                disabled={field.disabled}
                                             />
                                         </FormControl>
                                         <FormMessage />
