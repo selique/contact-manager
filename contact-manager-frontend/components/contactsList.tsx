@@ -30,12 +30,15 @@ export async function ContactsList() {
                             <p>{contact.phone}</p>
                             <p>{contact.email}</p>
                             <DialogModal triggerText="Edit Contact" title="Edit Contact" description="Edit a new contact">
-                                <ContactEdit contact={contact} token={session?.user.access_token}/>
+                                {session?.user.access_token && (
+                                    <ContactEdit contact={contact} token={session.user.access_token} />
+                                )}
                             </DialogModal>
-                            {session?.user.user.isAdmin ? <DialogModal triggerText="Delete Contact" title="Delete this contact?!" description="You sure are you want to delete this contact?">
-                                <ContactDelete contact={contact} token={session?.user.access_token}/>
-                            </DialogModal> : null}
-                            
+                                {session?.user.user.isAdmin ?
+                                    <DialogModal triggerText="Delete Contact" title="Delete this contact?!" description="You sure are you want to delete this contact?">
+                                        <ContactDelete contact={contact} token={session?.user.access_token}/>
+                                    </DialogModal>
+                                : null}
                         </CardContent>
                     </Card>
                 </li>

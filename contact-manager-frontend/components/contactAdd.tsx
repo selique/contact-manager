@@ -30,13 +30,18 @@ export default function ContactAdd(token: any) {
             email: "",
         },
     });
-    const [open, setOpen] = useState(false); // Manage dialog state
 
     const onSubmit = async (values: z.infer<typeof contactSchema>) => {
         try {
             const result = await handleAddContact(values, token.token);
-            if (result?.message) {
+            if ('message' in result) {
                 setGlobalError(result.message);
+            } else {
+                // Handle successful response, e.g., check status
+                if (!result.ok) {
+                    // Handle error response if needed
+                    setGlobalError('Failed to add contact.');
+                }
             }
         } catch (error) {
             console.log(
@@ -47,7 +52,7 @@ export default function ContactAdd(token: any) {
     };
 
     return (
-        <DialogModal triggerText="Add Contact" title="Add Contact" description="Add a new contact"  onClose={() => setOpen(false)}>
+        <DialogModal triggerText="Add Contact" title="Add Contact" description="Add a new contact">
             {globalError && <ErrorMessage error={globalError} />}
             <Form {...form}>
                 <form

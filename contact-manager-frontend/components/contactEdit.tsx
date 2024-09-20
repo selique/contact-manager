@@ -35,8 +35,14 @@ export default function ContactEdit({ contact, token }: { contact: any; token: s
     const onSubmit = async (values: z.infer<typeof updateContactSchema>) => {
         try {
             const result = await handleUpdateContact(values, token);
-            if (result?.message) {
+            if ('message' in result) {
                 setGlobalError(result.message);
+            } else {
+                // Handle successful response, e.g., check status
+                if (!result.ok) {
+                    // Handle error response if needed
+                    setGlobalError('Failed to edit contact.');
+                }
             }
         } catch (error) {
             console.log(

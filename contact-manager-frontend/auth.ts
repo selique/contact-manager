@@ -56,6 +56,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return { ...token, ...user };
         },
         session({ session, token }) {
+            //@ts-ignore
             session.user = token;
             return session;
         }

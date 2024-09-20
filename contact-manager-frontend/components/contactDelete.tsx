@@ -23,8 +23,14 @@ export default function ContactDelete({ contact, token }: { contact: any; token:
     const onSubmit = async (values: z.infer<typeof deleteContactSchema>) => {
         try {
             const result = await handleDeleteContact(values.id, token);
-            if (result?.message) {
+            if ('message' in result) {
                 setGlobalError(result.message);
+            } else {
+                // Handle successful response, e.g., check status
+                if (!result.ok) {
+                    // Handle error response if needed
+                    setGlobalError('Failed to delete contact.');
+                }
             }
         } catch (error) {
             console.log(

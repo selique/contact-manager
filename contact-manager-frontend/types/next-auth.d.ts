@@ -5,23 +5,23 @@ import "next-auth/jwt";
 
 declare module "next-auth" {
     interface User {
-        id: string
-        email: string
-        isAdmin: boolean
-        access_token: string
+        id: string;
+        email: string | null;
+        isAdmin: boolean;
+        access_token: string;
     }
     interface Session {
         user: {
-            user: User
-            access_token: string
+            access_token: string;
+            user: User;
         }
     }
 }
 
 declare module "next-auth/jwt" {
     interface JWT {
-        id: string
-        email: string
-        isAdmin: boolean
+        id: string;
+        email: string | null;
+        isAdmin: boolean;
     }
 }
