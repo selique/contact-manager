@@ -30,23 +30,25 @@ export async function handleAddContact({ name, address, phone, email, userId}: {
     }
 }
 
-export async function  handleUpdateContact({ id, name, address, phone, email, token }: {
+export async function  handleUpdateContact({ id, name, address, phone, email }: {
     id: number,
     name: string,
     address: string,
     phone: string,
     email: string,
-    token: string
-}) {
+}, token: string) {
+    console.log(token)
     try {
-        await fetch('http://localhost:4000/contacts', {
-            method: 'POST',
+        const UpdateContact = await fetch('http://localhost:4000/contacts/' + id, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token.token}`
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ id, name, address, phone, email })   
+            body: JSON.stringify({ name, address, phone, email })   
         })
+        revalidateTag('get-contacts-list')
+        return UpdateContact
     } catch (error) {
         return {
             message: 'Something went wrong. Please try again.'
@@ -54,21 +56,20 @@ export async function  handleUpdateContact({ id, name, address, phone, email, to
     } 
 }
 
-export async function  handleDeleteContact({ id, token }: {
-    id: number
-    token: string
-}) {
-
+export async function handleDeleteContact(id: number, token: string) {
     try {
-
-        await fetch('http://localhost:4000/contacts', {
+        console.log(token)
+        const DeleteContact  = await fetch('http://localhost:4000/contacts/' + id , {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token.token}`
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ id })
         })
+
+        revalidateTag('get-contacts-list')
+        console.log(DeleteContact)
+        return DeleteContact
     } catch (error) {
         return {
             message: 'Something went wrong. Please try again.'

@@ -1,12 +1,16 @@
+import ContactEdit from "./contactEdit";
+import ContactDelete from "./contactDelete";
 import { Card, CardContent, CardTitle } from "./ui/card";
-
-export async function ContactsList(token: string) {
+import DialogModal from "./ui/dialog";
+import { auth } from "@/auth";
+export async function ContactsList() {
+    const session = await auth();
 
     const response = await fetch( 'http://localhost:4000/contacts', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token.token}`
+            Authorization: `Bearer ${session?.user.access_token}`
         },
         next: {
             tags: ['get-contacts-list']
@@ -14,25 +18,29 @@ export async function ContactsList(token: string) {
     })
 
     const data = await response.json()
-    console.log(data)
+
     return (
-        <>
-            <h1>Contacts List</h1>
-            <ul>
-                {data.map((contact: any) => (
-                    <li key={contact.id}>
-                        <Card className="max-w-sm">
-                            <CardContent>
-                                <CardTitle>{contact.name}</CardTitle>
-                                <p>{contact.address}</p>
-                                <p>{contact.phone}</p>
-                                <p>{contact.email}</p>
-                            </CardContent>
-                        </Card>
-                    </li>
-                ))}
-            </ul>
-        </>
+        <ul className="flex flex-col gap-3 my-4">
+            {data.map((contact: any) => (
+                <li key={contact.id} className="flex gap-4">
+                    <Card className="max-w-sm">
+                        <CardContent>
+                            <CardTitle>{contact.name}</CardTitle>
+                            <p>{contact.address}</p>
+                            <p>{contact.phone}</p>
+                            <p>{contact.email}</p>
+                            <DialogModal triggerText="Edit Contact" title="Edit Contact" description="Edit a new contact">
+                                <ContactEdit contact={contact} token={session?.user.access_token}/>
+                            </DialogModal>
+                            {session?.user.user.isAdmin ? <DialogModal triggerText="Delete Contact" title="Delete this contact?!" description="You sure are you want to delete this contact?">
+                                <ContactDelete contact={contact} token={session?.user.access_token}/>
+                            </DialogModal> : null}
+                            
+                        </CardContent>
+                    </Card>
+                </li>
+            ))}
+        </ul>
     );
 }
 

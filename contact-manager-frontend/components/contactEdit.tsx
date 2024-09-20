@@ -12,29 +12,29 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { contactSchema } from "@/lib/zod";
+import { updateContactSchema } from "@/lib/zod";
 import ErrorMessage from "@/components/error-message";
 import LoadingButton from "@/components/loading-button";
-import { handleAddContact } from "../app/actions/contactActions";
+import { handleUpdateContact } from "../app/actions/contactActions";
 import { Input } from "@/components/ui/input";
-import DialogModal from "@/components/ui/dialog";
 
-export default function ContactAdd(token: any) {
+export default function ContactEdit({ contact, token }: { contact: any; token: string }) {
     const [globalError, setGlobalError] = useState<string>("");
-    const form = useForm<z.infer<typeof contactSchema>>({
-        resolver: zodResolver(contactSchema),
+
+    const form = useForm<z.infer<typeof updateContactSchema>>({
+        resolver: zodResolver(updateContactSchema),
         defaultValues: {
-            name: "",
-            address: "",
-            phone: "",
-            email: "",
+            id: contact.id || "",
+            name: contact.name || "",
+            address: contact.address || "",
+            phone: contact.phone || "",
+            email: contact.email || "",
         },
     });
-    const [open, setOpen] = useState(false); // Manage dialog state
 
-    const onSubmit = async (values: z.infer<typeof contactSchema>) => {
+    const onSubmit = async (values: z.infer<typeof updateContactSchema>) => {
         try {
-            const result = await handleAddContact(values, token);
+            const result = await handleUpdateContact(values, token);
             if (result?.message) {
                 setGlobalError(result.message);
             }
@@ -47,7 +47,7 @@ export default function ContactAdd(token: any) {
     };
 
     return (
-        <DialogModal triggerText="Add Contact" title="Add Contact" description="Add a new contact"  onClose={() => setOpen(false)}>
+        <>
             {globalError && <ErrorMessage error={globalError} />}
             <Form {...form}>
                 <form
@@ -131,11 +131,11 @@ export default function ContactAdd(token: any) {
 
                     {/* Submit button will go here */}
                     <LoadingButton
-                        text="Add Contact"
+                        text="Edit Contact"
                         pending={form.formState.isSubmitting}
                     />
                 </form>
             </Form>
-        </DialogModal>
+        </>
     );
 }

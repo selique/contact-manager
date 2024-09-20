@@ -10,22 +10,19 @@ export default async function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-24">
-            <Card className="max-w-sm">
+            <Card className="max-w-sm my-4">
                 <CardContent>
                     <CardTitle className="text-1xl font-bold">
                         Welcome, {session?.user.user.email}!
                     </CardTitle>
                 </CardContent>
             </Card>
-            
-            <div className="flex gap-5">
-                <div className="w-1/2">
-                    <ContactsList token={session?.user.access_token} />
-                </div>
-                <div className="w-1/2">
-                    <ContactAdd token={session?.user.access_token} userId={session?.user.user.id}/>
-                </div>
-            </div>
+
+            {session ? 
+                <ContactAdd token={session?.user.access_token}/>
+            : null}
+
+            <ContactsList />
         </main>
     );
 }
