@@ -10,7 +10,7 @@ import ErrorMessage from "@/components/error-message";
 import LoadingButton from "@/components/loading-button";
 import { handleDeleteContact } from "../app/actions/contactActions";
 
-export default function ContactEdit({ contact, token }: { contact: any; token: string }) {
+export default function ContactDelete({ contact, token }: { contact: any; token: string }) {
     const [globalError, setGlobalError] = useState<string>("");
 
     const form = useForm<z.infer<typeof deleteContactSchema>>({

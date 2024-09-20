@@ -34,7 +34,7 @@ export default function ContactAdd(token: any) {
 
     const onSubmit = async (values: z.infer<typeof contactSchema>) => {
         try {
-            const result = await handleAddContact(values, token);
+            const result = await handleAddContact(values, token.token);
             if (result?.message) {
                 setGlobalError(result.message);
             }

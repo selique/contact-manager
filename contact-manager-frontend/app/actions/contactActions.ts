@@ -15,13 +15,12 @@ export async function handleAddContact({ name, address, phone, email, userId}: {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token.token}`
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({ name, address, phone, email, userId})
         })
 
         revalidateTag('get-contacts-list')
-        
         return addContact
     } catch (error) {
         return {
@@ -68,7 +67,6 @@ export async function handleDeleteContact(id: number, token: string) {
         })
 
         revalidateTag('get-contacts-list')
-        console.log(DeleteContact)
         return DeleteContact
     } catch (error) {
         return {
